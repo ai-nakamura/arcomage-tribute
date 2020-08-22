@@ -10,20 +10,38 @@ loadImages(
         // Draw results.bg 
         ctx.drawImage(results.bg, 0, 0);
 
-        // Clip from spritesheet
-        ctx.rect(30, 30, 40, 50);
-        ctx.clip();
-        ctx.drawImage(results.spriteSheet, -50, -500);
+		var locations = [
+			[10, 331],
+			[111, 324],
+			[220, 324],
+			[325, 327],
+			[432, 325],
+			[537, 327]
+		];
+
+		var cards = [
+			72,
+			41,
+			20,
+			81,
+			108,
+			19
+		];
+
+		for (var index in cards) {
+			clipCards(ctx, results.spriteSheet, locations[index][0], locations[index][1], cards[index]);
+		}
+
     }
 );
 
 /**
-* Load a set of images all at once.
-*
-* @param {object} images - A dictionary. Key = image name. Value = URL.
-* @param {function} onDone - function to be called when loading is done
-*                            it will be called with the value of "results"
-*/
+ * Load a set of images all at once.
+ *
+ * @param {object} images - A dictionary. Key = image name. Value = URL.
+ * @param {function} onDone - function to be called when loading is done
+ *                            it will be called with the value of "results"
+ */
 function loadImages(images, onDone) {
    // Dictionary from image name to Image.
    var results = {};
@@ -61,6 +79,36 @@ function loadImages(images, onDone) {
    }
 }
 
-function clipCards(spriteSheet, xClip, yClip) {
-    
+/**
+ * Load a set of images all at once.
+ *
+ * @param {object} ctx - Canvas.context
+ * @param {Image} spriteSheet - spriteSheet with all game assets
+ * @param {number} x - x coordinate of where card is to be drawn
+ * @param {number} y - y coordinate of where card is to be drawn
+ * @param {number} cardNum - index of card to be drawn
+ */
+function clipCards(ctx, spriteSheet, x, y, cardNum) {
+	// 1. figure out the x, y coordinate of where I want to draw the card
+	var cardWidth = 96;
+	var cardHeight = 128;
+	var cardStartHeight = 220;
+
+	var xSpriteSheetOffset = 0 + cardWidth * (cardNum % 10);
+	var ySpriteSheetOffset = cardStartHeight + cardHeight * Math.floor(cardNum / 10);
+
+	var xSprite = x - xSpriteSheetOffset;
+	var ySprite = y - ySpriteSheetOffset;
+
+	// 2. make rect there (x, y, 94, 126)
+	ctx.save();
+	ctx.beginPath();
+	ctx.rect(x, y, cardWidth, cardHeight);
+        
+	// 3. .clip()
+	ctx.clip();
+
+	// 4. draw spriteSheet at the x, y to line up with the desired card
+    ctx.drawImage(spriteSheet, xSprite, ySprite);
+	ctx.restore();
 }
