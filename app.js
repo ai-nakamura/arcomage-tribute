@@ -1,39 +1,66 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-loadImages(
-    {
-        bg: 'Original game assets/Layout.bmp',
-        spriteSheet: 'Original game assets/SPRITES.bmp',
-    },
-    function(results) {
-        // Draw results.bg 
-        ctx.drawImage(results.bg, 0, 0);
+var bg;
+var spriteSheet;
 
-		var locations = [
-			[10, 331],
-			[111, 324],
-			[220, 324],
-			[325, 327],
-			[432, 325],
-			[537, 327]
-		];
+var locations = [
+	[10, 331],
+	[111, 324],
+	[220, 324],
+	[325, 327],
+	[432, 325],
+	[537, 327]
+];
 
-		var cards = [
-			72,
-			41,
-			20,
-			81,
-			108,
-			19
-		];
+var cards = [
+	72,
+	41,
+	20,
+	81,
+	108,
+	19
+];
 
-		for (var index in cards) {
-			clipCards(ctx, results.spriteSheet, locations[index][0], locations[index][1], cards[index]);
+// Game loop. After being called the first time, it is called 60 times per
+// second because of requestAnimationFrame().
+function loop() {
+	update();
+	draw();
+
+	requestAnimationFrame(loop);
+}
+
+// Updates game state for each new frame. Called once per frame.
+function update() {
+}
+
+// Draws the whole screen. Called once per frame.
+function draw() {
+	// Draw bg 
+	ctx.drawImage(bg, 0, 0);
+
+	for (var index in cards) {
+		clipCards(ctx, spriteSheet, locations[index][0], locations[index][1], cards[index]);
+	}
+}
+
+function main() {
+	loadImages(
+		{
+			bg: 'Original game assets/Layout.bmp',
+			spriteSheet: 'Original game assets/SPRITES.bmp',
+		},
+		function(results) {
+			bg = results.bg;
+			spriteSheet = results.spriteSheet;
+
+			loop();
 		}
+	);
+}
 
-    }
-);
+main();
 
 /**
  * Load a set of images all at once.
