@@ -28,12 +28,12 @@ function init() {
 	];
 
 	cards = [
-		72,
-		41,
-		20,
-		81,
-		108,
-		19
+		randomCard(),
+		randomCard(),
+		randomCard(),
+		randomCard(),
+		randomCard(),
+		randomCard()
 	];
 
 	// set up event handlers
@@ -164,4 +164,10 @@ function clipCards(x, y, cardNum) {
 	// 4. draw spriteSheet at the x, y to line up with the desired card
 	ctx.drawImage(spriteSheet, xSprite, ySprite);
 	ctx.restore();
+}
+
+function randomCard() {
+	const color = Math.floor(Math.random() * 3) * 40;
+	const card = Math.floor(Math.random() * 34);
+	return color + card;
 }
