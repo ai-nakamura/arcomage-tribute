@@ -37,6 +37,7 @@ function init() {
 	];
 
 	// set up event handlers
+
     // collision
     canvas.addEventListener('click', function(e) {
 		var pageOffSet = 10;
@@ -52,6 +53,7 @@ function init() {
     		if (X >= left && X < right &&
 				Y >= top  && Y < bottom) {
 				console.log(`card ${cards[i]} was clicked`);
+				cards[i] = randomCard();
 			}
 
 		}
@@ -70,6 +72,10 @@ function update() {
 function draw() {
 	// Draw bg 
 	ctx.drawImage(bg, 0, 0);
+
+	// resources
+	bitBlit(spriteSheet, [8, 56, 78, 216], [8 - 765, 56 - 0]);
+	bitBlit(spriteSheet, [555, 56, 78, 216], [555 - 765, 56 - 0]);
 
 	for (var index in cards) {
 		clipCards(locations[index][0], locations[index][1], cards[index]);
@@ -146,26 +152,40 @@ function loadImages(images, onDone) {
  */
 function clipCards(x, y, cardNum) {
 
-	// 1. figure out the x, y coordinate of where I want to draw the card
 	var xSpriteSheetOffset = 0 + cardWidth * (cardNum % 10);
 	var ySpriteSheetOffset = cardStartHeight + cardHeight * Math.floor(cardNum / 10);
 
 	var xSprite = x - xSpriteSheetOffset;
 	var ySprite = y - ySpriteSheetOffset;
 
-	// 2. make rect there (x, y, 94, 126)
-	ctx.save();
-	ctx.beginPath();
-	ctx.rect(x, y, cardWidth, cardHeight);
+	bitBlit(spriteSheet, [x, y, cardWidth, cardHeight], [xSprite, ySprite]);
 
-	// 3. .clip()
-	ctx.clip();
-
-	// 4. draw spriteSheet at the x, y to line up with the desired card
-	ctx.drawImage(spriteSheet, xSprite, ySprite);
-	ctx.restore();
 }
 
+/**
+ * Copies a rectangle from the source to the canvas
+ *
+ * @param source - source material that contiains the desired image
+ * @param destRect - rectangular region to draw the image
+ * @param srcOffSet - x y position to draw the source in such a way that the desired image aligns with the rectangular region
+ */
+function bitBlit(source, destRect, srcOffSet) {
+
+	ctx.save();
+	ctx.beginPath();
+	ctx.rect(...destRect);
+	ctx.clip();
+	ctx.drawImage(source, ...srcOffSet);
+	ctx.restore();
+
+}
+
+
+/**
+ * Calculate a new valid card to choose to display
+ *
+ * @returns {number} - card number to select
+ */
 function randomCard() {
 	const color = Math.floor(Math.random() * 3) * 40;
 	const card = Math.floor(Math.random() * 34);
