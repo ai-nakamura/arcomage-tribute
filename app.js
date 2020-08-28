@@ -87,7 +87,7 @@ function main() {
 	loadImages(
 		{
 			bg: 'Original game assets/Layout.bmp',
-			spriteSheet: 'Original game assets/SPRITES.bmp',
+			spriteSheet: 'Original game assets/SPRITES.png',
 		},
 		function(results) {
 			bg = results.bg;
