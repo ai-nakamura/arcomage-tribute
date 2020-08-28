@@ -6,6 +6,7 @@ var cardHeight = 128;
 var player;
 var enemy;
 
+
 // Game loop. After being called the first time, it is called 60 times per
 // second because of requestAnimationFrame().
 function loop() {
@@ -78,8 +79,8 @@ function init() {
 				Y >= top  && Y < bottom) {
 				console.log(`card ${cards[i]} was clicked`);
 				cards[i] = randomCard();
+				sounds.mm7.tower_up.play();
 			}
-
 		}
 	});
 
