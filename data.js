@@ -43,6 +43,55 @@ var sounds = {
 
 
 };
+
+var cards = {
+    // Brick Shortage: All players lose 8 bricks
+	0: {
+		bCost: 0
+	},
+	// Luck Cache: +2 Bricks, +2 Gems, Play again
+	1: {
+		bCost: 0
+	},
+	// Friendly Terrain: +1 Wall, play again
+	2: {
+		bCost: 1
+	},
+	// Miners: +1 Quarry
+	3: {
+		bCost: 3
+	},
+    // Mother Lode: if quarry < enemy quarry, +2 quarry. Else +1 quarry
+	4: {
+		bCost: 4
+	},
+	// Dwarven Miners: +4 Wall, +1 Quarry
+	3: {
+		bCost: 7
+	},
+	3: {
+		bCost: 0
+	},
+	3: {
+		bCost: 0
+	},
+	3: {
+		bCost: 0
+	},
+	3: {
+		bCost: 0
+	},
+	3: {
+		bCost: 0
+	},
+	3: {
+		bCost: 0
+	},
+	3: {
+		bCost: 0
+	},
+};
+
 /**
 var cards =	{
 	

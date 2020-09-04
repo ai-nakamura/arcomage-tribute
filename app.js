@@ -7,10 +7,12 @@ var player;
 var enemy;
 
 
+
+
 // Game loop. After being called the first time, it is called 60 times per
 // second because of requestAnimationFrame().
 function loop() {
-	update();
+	// update();
 	draw();
 
 	requestAnimationFrame(loop);
@@ -41,13 +43,15 @@ function init() {
 
 	player = {
 		resources: {
-			quarry: 2,
-			magic: 2,
+			quarry: 20,
+			magic: 5,
 			dungeon: 2,
 			bricks: 5,
 			gems: 5,
 			recruits: 5
-		}
+		},
+		wall: 10,
+		tower: 20
 	};
 
 	enemy = {
@@ -58,12 +62,14 @@ function init() {
 			bricks: 5,
 			gems: 5,
 			recruits: 5
-		}
+		},
+		wall: 10,
+		tower: 20
 	};
 
 	// set up event handlers
 
-    // collision
+    // card collision
     canvas.addEventListener('click', function(e) {
 		var pageOffSet = 10;
 		var X = e.pageX - pageOffSet;
@@ -79,7 +85,7 @@ function init() {
 				Y >= top  && Y < bottom) {
 				console.log(`card ${cards[i]} was clicked`);
 				cards[i] = randomCard();
-				sounds.mm7.tower_up.play();
+				// sounds.mm7.tower_up.play(); // doesn't work on chrome :(
 			}
 		}
 	});
@@ -90,43 +96,48 @@ function init() {
 }
 
 // Updates game state for each new frame. Called once per frame.
-function update() {
-	startTurn(player);
-	startTurn(enemy);
-}
+// function update() {
+// 	startTurn(player);
+// 	startTurn(enemy);
+// }
 
 // Take a turn.
-function startTurn(activePlayer) {
-	activePlayer.resources.bricks += activePlayer.resources.quarry;
-	activePlayer.resources.gems += activePlayer.resources.magic;
-	activePlayer.resources.recruits += activePlayer.resources.dungeon;
-}
+// function startTurn(activePlayer) {
+// 	activePlayer.resources.bricks += activePlayer.resources.quarry;
+// 	activePlayer.resources.gems += activePlayer.resources.magic;
+// 	activePlayer.resources.recruits += activePlayer.resources.dungeon;
+// }
 
 // Draws the whole screen. Called once per frame.
 function draw() {
 	// Draw background.
 	ctx.drawImage(bg, 0, 0);
 
-	// Resources.
-	drawResources(8, 56, player.resources);
-	drawResources(555, 56, player.resources);
+	// Resources
+	drawResources(8, 56, player, player.resources);
+	drawResources(555, 56, enemy, enemy.resources);
 
+	// Cards
 	for (var index in cards) {
-		clipCards(locations[index][0], locations[index][1], cards[index]);
+		drawCards(locations[index][0], locations[index][1], cards[index]);
 	}
 }
 
-function drawResources(x, y, resources) {
+function drawResources(x, y, active, resources) {
 
 	drawResourceBackground(x, y);
-	drawYellowNumber(x + 6, y + 36, player.resources.quarry);
-	drawYellowNumber(x + 6, y + 108, player.resources.magic);
-	drawYellowNumber(x + 6, y + 180, player.resources.dungeon);
+
+	drawYellowNumber(x + 6, y + 36, active.resources.quarry);
+	drawYellowNumber(x + 6, y + 108, active.resources.magic);
+	drawYellowNumber(x + 6, y + 180, active.resources.dungeon);
+
+	drawBlackNumber(x + 3, y + 58, active.resources.bricks);
 
 }
 
 function main() {
-	// technically this could be set up with async and wait, but that's a lessons for another day
+	// technically this could be set up with async and wait,
+	// but that's a lessons for another day
 	loadImages(
 		{
 			bg: 'Original game assets/Layout.bmp',
@@ -187,33 +198,12 @@ function loadImages(images, onDone) {
 }
 
 /**
- * Load a set of images all at once.
- *
- * @param {number} x - x coordinate of where card is to be drawn
- * @param {number} y - y coordinate of where card is to be drawn
- * @param {number} cardNum - index of card to be drawn
- */
-function clipCards(x, y, cardNum) {
-
-	var spriteWidth = cardWidth;
-	var spriteHeight = cardHeight;
-
-	var spriteOffsetX = 0 + spriteWidth * (cardNum % 10);
-	var spriteOffsetY = 220 + spriteHeight * Math.floor(cardNum / 10);
-
-	var sheetX = x - spriteOffsetX;
-	var sheetY = y - spriteOffsetY;
-
-	bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
-
-}
-
-/**
  * Copies a rectangle from the source to the canvas
  *
  * @param source - source material that contiains the desired image
  * @param destRect - rectangular region to draw the image
- * @param srcOffSet - x y position to draw the source in such a way that the desired image aligns with the rectangular region
+ * @param srcOffSet - x y position to draw the source in such a way that
+ * 					  the desired image aligns with the rectangular region
  */
 function bitBlit(source, destRect, srcOffSet) {
 
@@ -254,6 +244,28 @@ function drawResourceBackground(x, y) {
 
 }
 
+/**
+ * Load a set of images all at once.
+ *
+ * @param {number} x - x coordinate of where card is to be drawn
+ * @param {number} y - y coordinate of where card is to be drawn
+ * @param {number} cardNum - index of card to be drawn
+ */
+function drawCards(x, y, cardNum) {
+
+	var spriteWidth = cardWidth;
+	var spriteHeight = cardHeight;
+
+	var spriteOffsetX = 0 + spriteWidth * (cardNum % 10);
+	var spriteOffsetY = 220 + spriteHeight * Math.floor(cardNum / 10);
+
+	var sheetX = x - spriteOffsetX;
+	var sheetY = y - spriteOffsetY;
+
+	bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
+
+}
+
 function drawYellowNumber(x, y, number) {
 
 	if (number >= 10) {
@@ -282,4 +294,32 @@ function drawYellowDigit(x, y, digit) {
 	// FIXME: Make darker.
 	bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
 
+}
+
+function drawBlackNumber(x, y, number) {
+
+	if (number >= 10) {
+		var digit = Math.floor(number / 10);
+		drawBlackDigit(x, y, digit);
+
+		x += 22;
+		number %= 10;
+	}
+
+	drawBlackDigit(x, y, digit);
+
+}
+
+function drawBlackDigit(x, y, digit) {
+
+	var spriteWidth = 13;
+	var spriteHeight = 10;
+
+	var spriteOffsetX = 254 + spriteWidth * digit;
+	var spriteOffsetY = 128;
+
+	var sheetX = x - spriteOffsetX;
+	var sheetY = y - spriteOffsetY;
+
+	bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
 }
