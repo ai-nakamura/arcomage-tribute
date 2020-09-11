@@ -114,8 +114,8 @@ function draw() {
 	ctx.drawImage(bg, 0, 0);
 
 	// Resources
-	drawResources(8, 56, player, player.resources);
-	drawResources(555, 56, enemy, enemy.resources);
+	drawResources(8, 56, player);
+	drawResources(555, 56, enemy);
 
 	// Cards
 	for (var index in cards) {
@@ -123,7 +123,7 @@ function draw() {
 	}
 }
 
-function drawResources(x, y, active, resources) {
+function drawResources(x, y, active) {
 
 	drawResourceBackground(x, y);
 
@@ -131,7 +131,9 @@ function drawResources(x, y, active, resources) {
 	drawYellowNumber(x + 6, y + 108, active.resources.magic);
 	drawYellowNumber(x + 6, y + 180, active.resources.dungeon);
 
-	drawBlackNumber(x + 3, y + 58, active.resources.bricks);
+	drawBlackNumber(x + 3, y + 58, active.resources.bricks, "bricks");
+	drawBlackNumber(x + 3, y + 130, active.resources.gems, "gems");
+	drawBlackNumber(x + 3, y + 202, active.resources.recruits, "recruits");
 
 }
 
@@ -296,27 +298,31 @@ function drawYellowDigit(x, y, digit) {
 
 }
 
-function drawBlackNumber(x, y, number) {
+function drawBlackNumber(x, y, number, resource) {
 
 	if (number >= 10) {
 		var digit = Math.floor(number / 10);
-		drawBlackDigit(x, y, digit);
+		drawBlackDigit(x, y, digit, resource);
 
-		x += 22;
+		x += 13;
 		number %= 10;
 	}
 
-	drawBlackDigit(x, y, digit);
+	drawBlackDigit(x, y, number, resource);
 
 }
 
-function drawBlackDigit(x, y, digit) {
+function drawBlackDigit(x, y, digit, resource) {
 
 	var spriteWidth = 13;
 	var spriteHeight = 10;
 
 	var spriteOffsetX = 254 + spriteWidth * digit;
 	var spriteOffsetY = 128;
+
+	if(resource==="bricks")	  { spriteOffsetY += spriteHeight * 0; }
+	if(resource==="gems")	  { spriteOffsetY += spriteHeight * 1; }
+	if(resource==="recruits") { spriteOffsetY += spriteHeight * 2; }
 
 	var sheetX = x - spriteOffsetX;
 	var sheetY = y - spriteOffsetY;
