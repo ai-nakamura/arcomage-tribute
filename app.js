@@ -1,4 +1,4 @@
-var canvas, ctx, bg, spriteSheet, locations, cards;
+var canvas, ctx, bg, spriteSheet, locations, playerHand;
 
 var player;
 var enemy;
@@ -27,7 +27,7 @@ function init() {
 		[537, 327]
 	];
 
-	cards = [
+	playerHand = [
 		randomCard(),
 		randomCard(),
 		randomCard(),
@@ -78,8 +78,11 @@ function init() {
 
     		if (X >= left && X < right &&
 				Y >= top  && Y < bottom) {
-				console.log(`card ${cards[i]} was clicked`);
-				cards[i] = randomCard();
+				console.log(`card ${playerHand[i]} was clicked`);
+				if (cards[playerHand[i]].effect) {
+					console.log(cards[playerHand[i]].effect());
+				}
+				playerHand[i] = randomCard();
 				// sounds.mm7.tower_up.play(); // doesn't work on chrome :(
 			}
 		}
@@ -180,24 +183,12 @@ function draw() {
 	drawResources(555, 56, enemy);
 
 	// Cards
-	for (var index in cards) {
-		drawCards(locations[index][0], locations[index][1], cards[index]);
+	for (var index in playerHand) {
+		drawCards(locations[index][0], locations[index][1], playerHand[index]);
 	}
 }
 
-function drawResources(x, y, active) {
 
-	drawResourceBackground(x, y);
-
-	drawYellowNumber(x + 6, y + 36, active.resources.quarry);
-	drawYellowNumber(x + 6, y + 108, active.resources.magic);
-	drawYellowNumber(x + 6, y + 180, active.resources.dungeon);
-
-	drawBlackNumber(x + 3, y + 58, active.resources.bricks, "bricks");
-	drawBlackNumber(x + 3, y + 130, active.resources.gems, "gems");
-	drawBlackNumber(x + 3, y + 202, active.resources.recruits, "recruits");
-
-}
 
 /**
  * Calculate a new valid card to choose to display

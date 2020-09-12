@@ -21,9 +21,29 @@ function bitBlit(source, destRect, srcOffSet) {
 }
 
 /**
+ *
+ * @param {number} x - x position
+ * @param {number} y - y position
+ * @param {object} active - player whose resources are to be drawn
+ */
+function drawResources(x, y, active) {
+
+    drawResourceBackground(x, y);
+
+    drawYellowNumber(x + 6, y + 36, active.resources.quarry);
+    drawYellowNumber(x + 6, y + 108, active.resources.magic);
+    drawYellowNumber(x + 6, y + 180, active.resources.dungeon);
+
+    drawBlackNumber(x + 3, y + 58, active.resources.bricks, "bricks");
+    drawBlackNumber(x + 3, y + 130, active.resources.gems, "gems");
+    drawBlackNumber(x + 3, y + 202, active.resources.recruits, "recruits");
+
+}
+
+/**
  * Draw a resource background
- * @param x = x position on canvas to draw the resource
- * @param y = y position on canvas to draw the resource
+ * @param {number} x - x position
+ * @param {number} y - y position
  */
 function drawResourceBackground(x, y) {
 
