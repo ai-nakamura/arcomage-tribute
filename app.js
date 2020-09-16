@@ -33,7 +33,7 @@ function init() {
 		randomCard(),
 		randomCard(),
 		randomCard(),
-		randomCard()
+		randomCard(),
 	];
 
 	player = {
@@ -41,7 +41,7 @@ function init() {
 			quarry: 20,
 			magic: 5,
 			dungeon: 2,
-			bricks: 5,
+			bricks: 104,
 			gems: 0,
 			recruits: 5
 		},
@@ -80,7 +80,7 @@ function init() {
 				Y >= top  && Y < bottom) {
 				console.log(`card ${playerHand[i]} was clicked`);
 				if (cards[playerHand[i]].effect) {
-					console.log(cards[playerHand[i]].effect());
+					playCard(playerHand[i]);
 				}
 				playerHand[i] = randomCard();
 				// sounds.mm7.tower_up.play(); // doesn't work on chrome :(
@@ -91,6 +91,101 @@ function init() {
 	// call loop
 	loop();
 
+}
+
+function playCard(cardNumber) {
+	var action = cards[cardNumber].effect();
+
+	if (!canPlay(cardNumber)) {
+		console.log('Not enough resources! Maybe next turn :(');
+		return;
+	}
+
+	switch(cardColor(cardNumber)) {
+		case 0:
+			player.resources.bricks -= cards[cardNumber].cost;
+			break;
+		case 1:
+			player.resources.gems -= cards[cardNumber].cost;
+			break;
+		case 2:
+			player.resources.recruits -= cards[cardNumber].cost;
+			break;
+	}
+
+	if (action.active) {
+		applyPlayerAction(player, action.active);
+	}
+
+	if (action.enemy) {
+		applyPlayerAction(enemy, action.enemy);
+	}
+
+	if (action.play_again) {
+		// TODO
+	}
+
+	console.log('player', player);
+	console.log('enemy', enemy);
+}
+
+function cardColor(cardNumber) {
+	return Math.floor(cardNumber / 40);
+}
+
+function canPlay(cardNumber) {
+	var card = cards[cardNumber];
+	var cost = card.cost;
+
+	switch (cardColor(cardNumber)) {
+		case 0:
+			return cost <= player.resources.bricks;
+		case 1:
+			return cost <= player.resources.gems;
+		case 2:
+			return cost <= player.resources.recruits;
+	}
+}
+
+function applyPlayerAction(player, action) {
+	var r = player.resources;
+
+	if (action.bricks) {
+		r.bricks = Math.max(0, r.bricks + action.bricks);
+	}
+	if (action.gems) {
+		r.gems = Math.max(0, r.gems + action.gems);
+	}
+	if (action.recruits) {
+		r.recruits = Math.max(0, r.recruits + action.recruits);
+	}
+
+	if (action.quarry) {
+		r.quarry = Math.max(0, r.quarry + action.quarry);
+	}
+	if (action.magic) {
+		r.magic = Math.max(0, r.magic + action.magic);
+	}
+	if (action.dungeon) {
+		r.dungeon = Math.max(0, r.dungeon + action.dungeon);
+	}
+
+	if (action.tower) {
+		player.tower += action.tower;
+	}
+	if (action.wall) {
+		player.wall += action.wall;
+	}
+	if (action.damage) {
+		player.wall -= action.damage;
+		if (player.wall < 0) {
+			player.tower += player.wall;
+			player.wall = 0;
+		}
+	}
+
+	player.wall = Math.max(0, player.wall);
+	player.tower = Math.max(0, player.tower);
 }
 
 // Updates game state for each new frame. Called once per frame.
