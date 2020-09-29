@@ -1,3 +1,4 @@
+
 var sounds = {
 	archmage: {
 		damage:			new Audio('Sounds/Archmage/damage.wav'),
@@ -38,6 +39,7 @@ var sounds = {
 		tower_up:		new Audio('Sounds/Might and Magic 8/tower up.wav'),
 		typing:			new Audio('Sounds/Might and Magic 8/typing.wav'),
 		victory:		new Audio('Sounds/Might and Magic 8/victory.wav'),
+
 		wall_up:		new Audio('Sounds/Might and Magic 8/wall up.wav'),
 	}
 
@@ -82,8 +84,12 @@ var cards = {
 	0: {
 		cost: 0,
 		effect: () => ({
-			active: { bricks: -8 },
-			enemy: { bricks: -8 },
+			active: {
+				bricks: -8
+				},
+			enemy: {
+				bricks: -8
+				},
 		})
 	},
 
@@ -112,7 +118,9 @@ var cards = {
 	3: {
 		cost: 3,
 		effect: () => ({
-			active: { quarry: +1 }
+			active: {
+				quarry: +1
+				}
 		})
 	},
 
@@ -165,7 +173,9 @@ var cards = {
 	8: {
 		cost: 2,
 		effect: () => ({
-			active: { wall: +3 }
+			active: {
+				wall: +3
+				}
 		})
 	},
 
@@ -173,7 +183,9 @@ var cards = {
 	9: {
 		cost: 3,
 		effect: () => ({
-			active: { wall: +4 }
+			active: {
+				wall: +4
+				}
 		})
 	},
 
@@ -185,7 +197,9 @@ var cards = {
 				gems: 4,
 				quarry: 1
 			},
-			enemy: { quarry: +1 }
+			enemy: {
+				quarry: +1
+				}
 		})
 	},
 
@@ -194,7 +208,7 @@ var cards = {
 		cost: 3,
 		effect: () => ({
 			active: {
-				wall: player.wall === 0 ? 6 : 3
+				wall: player.wall === 0 ? +6 : +3
 			}
 		})
 	},
@@ -218,7 +232,7 @@ var cards = {
 		cost: 8,
 		effect: () => ({
 			active: {
-				magic: 1
+				magic: +1
 			},
 			play_again: true
 		})
@@ -242,7 +256,7 @@ var cards = {
 		cost: 5,
 		effect: () => ({
 			active: {
-				wall: 6
+				wall: +6
 			}
 		})
 	},
@@ -262,7 +276,7 @@ var cards = {
 		cost: 6,
 		effect: () => ({
 			active: {
-				quarry: 2
+				quarry: +2
 			}
 		})
 	},
@@ -272,9 +286,9 @@ var cards = {
 		cost: 0,
 		effect: () => ({
 			active: {
-				gems: 5,
+				gems: +5,
 				quarry: -1,
-				wall: 10
+				wall: +10
 			}
 		})
 	},
@@ -284,7 +298,7 @@ var cards = {
 		cost: 8,
 		effect: () => ({
 			active: {
-
+				wall: +8
 			}
 		})
 	},
@@ -294,8 +308,8 @@ var cards = {
 		cost: 9,
 		effect: () => ({
 			active: {
-				dungeon: 1,
-				wall: 5
+				dungeon: +1,
+				wall: +5
 			}
 		})
 	},
@@ -305,8 +319,8 @@ var cards = {
 		cost: 9,
 		effect: () => ({
 			active: {
-				gems: 7,
-				wall: 7
+				gems: +7,
+				wall: +7
 			}
 		})
 	},
@@ -316,8 +330,8 @@ var cards = {
 		cost: 11,
 		effect: () => ({
             active: {
-            	wall: 6,
-				tower: 3
+            	wall: +6,
+				tower: +3
 			}
 		})
 	},
@@ -327,7 +341,7 @@ var cards = {
 		cost: 13,
 		effect: () => ({
 			active: {
-				wall: 12
+				wall: +12
 			}
 		})
 	},
@@ -337,8 +351,8 @@ var cards = {
 		cost: 15,
 		effect: () => ({
             active: {
-				wall: 8,
-				tower: 5
+				wall: +8,
+				tower: +5
             }
 		})
 	},
@@ -348,7 +362,7 @@ var cards = {
 		cost: 0,
 		effect: () => ({
 			active: {
-				wall: 15
+				wall: +15
 			}
 		})
 	},
@@ -358,10 +372,10 @@ var cards = {
 		cost: 0,
 		effect: () => ({
 			active: {
-				wall: 6
+				wall: +6
 			},
 			enemy: {
-				damage: 10
+				damage: +10
 			}
 		})
 	},
@@ -371,8 +385,8 @@ var cards = {
 		cost: 24,
 		effect: () => ({
 			active: {
-				wall: 20,
-				tower: 8
+				wall: +20,
+				tower: +8
 			}
 		})
 	},
@@ -428,7 +442,7 @@ var cards = {
 			active: {
 				recruits: +6,
 				wall: +6,
-				dungeon: player.dungeon < enemy.dungeon ? +1 : 0
+				dungeon: player.resources.dungeon < enemy.resources.dungeon ? +1 : 0
 			}
 		})
 	},
@@ -465,326 +479,409 @@ var cards = {
 	/*                                     */
 	/***************************************/
 
-	// 
+	// Quartz: +1 Tower, play again
 	40: {
-		cost: 0,
+		cost: 1,
 		effect: () => ({
-
+			active: {
+				Tower: +1
+			},
+			play_again: true
 		})
 	},
 
-	// 
+	// Smoky Quartz: 1 Damage to enemy tower, Play again
 	41: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			enemy: {
+				tower: -1
+			},
+			play_again: true
 		})
 	},
 
-	// 
+	// Amethyst: +3 Tower
 	42: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			active: {
+				tower: +3
+			}
 		})
 	},
 
-	// 
+	// Spell Weavers: +1 Magic
 	43: {
-		cost: 0,
+		cost: 3,
 		effect: () => ({
-
+			active: {
+				magic: +1
+			}
 		})
 	},
 
-	// 
+	// TODO::: Prism: Draw 1, Discard 1 card, Play again
 	44: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			play_again: true
 		})
 	},
 
-	// 
+	// TODO::: Lodestone: +3 Tower. This card can't be discarded without playing it
 	45: {
-		cost: 0,
+		cost: 5,
 		effect: () => ({
-
+			active: {
+				tower: +3
+			}
 		})
 	},
 
-	// 
+	// Solar Flare: +2 Tower, 2 Damage to enemy tower
 	46: {
-		cost: 0,
+		cost: 4,
 		effect: () => ({
-
-		})
+			active: {
+				tower: +2
+			},
+			enemy: {
+				tower: -2	
+			}
+		}
 	},
 
-	// 
+	// Crystal Matrix: +1 Magic, +3 Tower, +1 Enemy tower
 	47: {
-		cost: 0,
+		cost: 6,
 		effect: () => ({
-
+			active: {
+				magic: +1,
+				tower: +3
+			},
+			enemy: {
+				tower: +1
+			}
 		})
 	},
 
-	// 
+	// Gemstone Flaw: 3 Damage to enemy tower
 	48: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			enemy: {
+				tower: -3
+			}
 		})
 	},
 
-	// 
+	// Ruby: +5 Tower
 	49: {
-		cost: 0,
+		cost: 3,
 		effect: () => ({
-
+			active: {
+				tower: +5
+			}
 		})
 	},
 
-	// 
+	// Gem Spear: 5 Damage to enemy tower
 	50: {
-		cost: 0,
+		cost: 4,
 		effect: () => ({
-
+			enemy: {
+				tower: -5
+			}
 		})
 	},
 
-	// 
+	// Power Burn: 5 Damage to your tower, +2 Magic
 	51: {
-		cost: 0,
+		cost: 3,
 		effect: () => ({
-
+			active: {
+				magic: +2,
+				tower: -5
+			}
 		})
 	},
 
-	// 
+	// Harmonic Vibe: +1 Magic, +3 Tower, +3 Wall
 	52: {
-		cost: 0,
+		cost: 7,
 		effect: () => ({
-
+			active: {
+				magic: +1,
+				tower: +3,
+				wall: +3
+			}
 		})
 	},
 
-	// 
+	// Parity: All player's magic equals the highest player's magic
 	53: {
-		cost: 0,
-		effect: () => ({
+		cost: 7,
+		effect: () => {
+			var action = {};
+			var pMagic = player.resources.magic;
+			var eMagic = enemy.resources.magic;
 
-		})
+			if ( pMagic < eMagic ) {
+				action.active = {
+					magic: eMagic;
+				};
+			}
+			if ( eMagic < pMagic ) {
+				action.enemy = {
+					magic: pMagic;
+				};
+			}
+			return action;
+		}
 	},
 
-	// 
+	// Emerald: +8 Tower
 	54: {
-		cost: 0,
+		cost: 6,
 		effect: () => ({
-
+			active: {
+				tower: +3
+			}
 		})
 	},
 
-	// 
+	// Pearl of Wisdom: +5 Tower, +1 Magic
 	55: {
-		cost: 0,
+		cost: 9,
 		effect: () => ({
-
+			active: {
+				magic: +1,
+				tower: +5
+			}
 		})
 	},
 
-	// 
+	// Shatterer: -1 Magic, 9 Damage to enemy tower
 	56: {
-		cost: 0,
+		cost: 8,
 		effect: () => ({
-
+			active: {
+				magic: -1
+			},
+			enemy: {
+				tower: -8
+			}
 		})
 	},
 
-	// 
+	// Crumblestone: +5 Tower, Enemy loses 6 bricks
 	57: {
-		cost: 0,
+		cost: 7,
 		effect: () => ({
-
+			active: {
+				tower: +5
+			},
+			enemy: {
+				bricks: -6
+			}
 		})
 	},
 
-	// 
+	// Sapphire: +11 Tower
 	58: {
-		cost: 0,
+		cost: 10,
 		effect: () => ({
-
+			active: {
+				tower: +11
+			}
 		})
 	},
 
-	// 
+	// Discord: 7 Damage to all towers, all player's magic -1
 	59: {
-		cost: 0,
+		cost: 5,
 		effect: () => ({
-
+			active: {
+				magic: -1,
+				tower: -7
+			},
+			enemy: {
+				magic: -1,
+				tower: -7
+			}
 		})
 	},
 
-	// 
+	// Fire Ruby: +6 Tower, 4 Damage to all enemy towers
 	60: {
-		cost: 0,
+		cost: 13,
 		effect: () => ({
-
+			active: {
+				tower: +6
+			},
+			enemy: {
+				tower: -4
+			}
 		})
 	},
 
-	// 
+	// Quarry's Help: +7 Tower, Lose 10 bricks
 	61: {
-		cost: 0,
+		cost: 4,
 		effect: () => ({
-
+			active: {
+				bricks: -10,
+				tower: +10
+			}
 		})
 	},
 
-	// 
+	// Crystal Shield: +8 Tower, +3 Wall
 	62: {
-		cost: 0,
+		cost: 12,
 		effect: () => ({
-
+			active: {
+				tower: +8,
+				wall: +3
+			}
 		})
 	},
 
-	// 
+	// Empathy Gem: +8 Tower, +1 Dungeon
 	63: {
-		cost: 0,
+		cost: 14,
 		effect: () => ({
-
+			active: {
+				dungeon: +1,
+				tower: +8
+			}
 		})
 	},
 
-	// 
+	// Diamond: +15 Tower
 	64: {
-		cost: 0,
+		cost: 16,
 		effect: () => ({
-
+			active: {
+				tower: +15
+			}
 		})
 	},
 
-	// 
+	// Sanctuary: +10 Tower, +5 Wall, Gain 5 recruits
 	65: {
-		cost: 0,
+		cost: 15,
 		effect: () => ({
-
+			active: {
+				recruits: +5,
+				tower: +10,
+				wall: +5
+			}
 		})
 	},
 
-	// 
+	// Lava Jewel: +12 Tower, 6 Damage to all enemies
 	66: {
-		cost: 0,
+		cost: 17,
 		effect: () => ({
-
+			active: {
+				tower: +12
+			},
+			enemy: {
+				damage: -6
+			}
 		})
 	},
 
-	// 
+	// Dragon's Eye: +20 Tower
 	67: {
-		cost: 0,
+		cost: 21,
 		effect: () => ({
-
+			active: {
+				tower: +20
+			}
 		})
 	},
 
-	// 
+	// Crystalize: +11 Tower, -6 Wall
 	68: {
-		cost: 0,
+		cost: 8,
 		effect: () => ({
-
+			active: {
+				tower: +11,
+				wall: -6
+			}
 		})
 	},
 
-	// 
+	// Bag of Baubles: If Tower < enemy Tower +2 Tower, else +1 Tower
 	69: {
 		cost: 0,
 		effect: () => ({
-
+			active: {
+				tower: (player.tower < enemy.tower) ? +2 : +1
+			}
 		})
 	},
 
-	// 
+	// Rainbow: +1 Tower to all players. You gain 3 gems
 	70: {
 		cost: 0,
 		effect: () => ({
-
+			active: {
+				gems: +3,
+				tower: +1
+			},
+			enemy: {
+				tower: +1
+			}
 		})
 	},
 
-	// 
+	// Apprentice: +4 Tower, you lose 3 recruits. 2 damage to enemy Tower
 	71: {
-		cost: 0,
+		cost: 5,
 		effect: () => ({
-
+			active: {
+				recruits: -3,
+				tower: +4
+			},
+			enemy: {
+				tower: -2
+			}
 		})
 	},
 
-	// 
+	// TODO Lightning Shard: If Tower > enemy Wall, 8 damage to enemy Tower, else 8 damage
 	72: {
-		cost: 0,
-		effect: () => ({
-
-		})
+		cost: 11,
+		effect: () => {
+			var action = {};
+			if (player.tower > enemy.wall) {
+				action.enemy = {
+					tower: -8
+				};
+			} else {
+				action.enemy = {
+					damage: 8
+				};
+			}
+			return action;
+		}
 	},
 
-	// 
+	// Phase Jewel: +13 Tower, +6 recruits, +6 bricks
 	73: {
-		cost: 0,
+		cost: 18,
 		effect: () => ({
-
+			active: {
+				bricks: +6,
+				recruits: +6,
+				tower: +13
+			}
 		})
 	},
-
-	// 
-	74: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	75: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	76: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	77: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	78: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	79: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
 
 	/***************************************/
 	/*                                     */
@@ -792,332 +889,402 @@ var cards = {
 	/*                                     */
 	/***************************************/
 
-	// 
+	// Mad Cow Disease: All players lose 6 recruits
 	80: {
 		cost: 0,
 		effect: () => ({
-
+			active: {
+				recruits: -6
+			},
+			enemy: {
+				recruits: -6
+			}
 		})
 	},
 
-	// 
+	// Faerie: 2 Damage, Play again
 	81: {
-		cost: 0,
+		cost: 1,
 		effect: () => ({
-
+			enemy: {
+				damage: 2
+			},
+			play_again: true
 		})
 	},
 
-	// 
+	// Moody Goblins: 4 Damage, You lose 3 gems
 	82: {
-		cost: 0,
+		cost: 1,
 		effect: () => ({
-
+			active: {
+				gems: -3
+			},
+			enemy: {
+				damage: -4
+			}
 		})
 	},
 
-	// 
+	// Minotaur: +1 Dungeon
 	83: {
-		cost: 0,
+		cost: 3,
 		effect: () => ({
-
+			active: {
+				dungeon: +3
+			}
 		})
 	},
 
-	// 
+	// TODO: Elven Scout: Draw 1 card, Discard 1 card, Play again
 	84: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			play_again: true
 		})
 	},
 
-	// 
+	// Goblin Mob: 6 Damage, You take 3 damage
 	85: {
-		cost: 0,
+		cost: 3,
 		effect: () => ({
-
+			active: {
+				damage: 3
+			},
+			enemy: {
+				damage: 6
+			}
 		})
 	},
 
-	// 
+	// Goblin Archers: 3 Damage to enemy tower, You take 1 damage
 	86: {
-		cost: 0,
+		cost: 4,
 		effect: () => ({
-
+			active: {
+				damage: 1
+			},
+			enemy: {
+				tower: -3
+			}
 		})
 	},
 
-	// 
+	// Shadow Faerie: 2 Damage to enemy tower, Play again
 	87: {
-		cost: 0,
+		cost: 6,
 		effect: () => ({
-
+			enemy: {
+				tower: -2
+			},
+			play_again: true
 		})
 	},
 
-	// 
+	// Orc: 5 Damage
 	88: {
-		cost: 0,
+		cost: 3,
 		effect: () => ({
-
+			enemy: {
+				damage: 5
+			}
 		})
 	},
 
-	// 
+	// Dwarves: 4 Damage, +3 Wall
 	89: {
-		cost: 0,
+		cost: 5,
 		effect: () => ({
-
+			active: {
+				wall: +3
+			},
+			enemy: {
+				damage: 4
+			}
 		})
 	},
 
-	// 
+	// Little Snakes: 4 Damage to enemy tower
 	90: {
-		cost: 0,
+		cost: 6,
 		effect: () => ({
-
+			enemy: {
+				tower: -4
+			}
 		})
 	},
 
-	// 
+	// Troll Trainer: +2 Dungeon
 	91: {
-		cost: 0,
+		cost: 7,
 		effect: () => ({
-
+			active: {
+				dungeon: +2
+			}
 		})
 	},
 
-	// 
+	// Tower Gremlin: 2 Damage, +4 Wall, +2 Tower
 	92: {
-		cost: 0,
+		cost: 8,
 		effect: () => ({
-
+			active: {
+				tower: +2,
+				wall: +4
+			},
+			enemy: {
+				damage: 2
+			}
 		})
 	},
 
-	// 
+	// Full Moon: +1 to all player's Dungeon, You gain 3 recruits
 	93: {
 		cost: 0,
 		effect: () => ({
-
+			active: {
+				recruits: +3,
+				dungeon: +1
+			},
+			enemy: {
+				dungeon: +1
+			}
 		})
 	},
 
-	// 
+	// Slasher: 6 Damage
 	94: {
-		cost: 0,
+		cost: 5,
 		effect: () => ({
-
+			enemy: {
+				damage: 6
+			}
 		})
 	},
 
-	// 
+	// Ogre: 7 Damage
 	95: {
-		cost: 0,
+		cost: 6,
 		effect: () => ({
-
+			enemy: {
+				damage: 7
+			}
 		})
 	},
 
-	// 
+	// Rabid Sheep: 6 Damage, Enemy loses 3 recruits
 	96: {
-		cost: 0,
+		cost: 6,
 		effect: () => ({
-
+			enemy: {
+				recruits: -3,
+				damage: 6
+			}
 		})
 	},
 
-	// 
+	// Imp: 6 Damage. All players lose 5 bricks, 5 gems, and recruits
 	97: {
-		cost: 0,
+		cost: 5,
 		effect: () => ({
-
+			active: {
+				bricks: -5,
+				gems: -5,
+				recruits: -5
+			},
+			enemy: {
+				bricks: -5,
+				gems: -5,
+				recruits: -5
+			}
 		})
 	},
 
-	// 
+	// Spizzer: If enemy wall = 0, 10 damage, else 6 damage
 	98: {
-		cost: 0,
+		cost: 8,
 		effect: () => ({
-
+			enemy: {
+				damage: (enemy.wall === 0) ? 10 : 6
+			}
 		})
 	},
 
-	// 
+	// Werewolf: 9 damage
 	99: {
-		cost: 0,
+		cost: 9,
 		effect: () => ({
-
+			enemy: {
+				damage: 9
+			}
 		})
 	},
 
-	// 
+	// Corrosion Cloud: If enemy wall > 0, 10 damage, else 7 damage
 	100: {
-		cost: 0,
+		cost: 11,
 		effect: () => ({
-
+			enemy: {
+				damage: (enemy.wall > 0) ? 10 : 7
+			}
 		})
 	},
 
-	// 
+	// Unicorn: If magic > enemy magic, 12 damage, else 8 damage
 	101: {
-		cost: 0,
+		cost: 9,
 		effect: () => ({
-
+			enemy: {
+				damage: (enemy.wall > 0) ? 10 : 7
+			}
 		})
 	},
 
-	// 
+	// Elven Archers: If wall > enemy wall, 6 damage to enemy tower, else 6 damage
 	102: {
-		cost: 0,
-		effect: () => ({
-
-		})
+		cost: 10,
+		effect: () => {
+			var action = {}
+			if (player.wall > enemy.wall) {
+				action.enemy.tower: -6
+			} else {
+				action.enemy.damage: 6
+			}
+		}
 	},
 
-	// 
+	// Succubus: 5 Damage to enemy tower, enemy loses 8 recruits
 	103: {
-		cost: 0,
+		cost: 14,
 		effect: () => ({
-
+			enemy: {
+				recruits: -8,
+				tower: -5
+			}
 		})
 	},
 
-	// 
+	// Rock Stompers: 8 Damage, -1 Enemy quarry
 	104: {
-		cost: 0,
+		cost: 11,
 		effect: () => ({
-
+			enemy: {
+				quarry: -1,
+				damage: 8
+			}
 		})
 	},
 
-	// 
+	// TODO: Thief: Enemy loses 10 gems, 5 bricks, you gan 1/2 amt. round up
 	105: {
-		cost: 0,
+		cost: 12,
 		effect: () => ({
 
 		})
 	},
 
-	// 
+	// Stone Giant: 10 Damage, +4 Wall
 	106: {
-		cost: 0,
+		cost: 15,
 		effect: () => ({
-
+			active: {
+				wall: +4
+			},
+			enemy: {
+				damage: 10
+			}
 		})
 	},
 
-	// 
+	// Vampire: 10 Damage. Enemy loses 5 recruits, -1 enemy dungeon
 	107: {
-		cost: 0,
+		cost: 17,
 		effect: () => ({
-
+			enemy: {
+				recruits: -5,
+				dungeon: -1,
+				damage: 10
+			}
 		})
 	},
 
-	// 
+	// Dragon: 20 Damage. Enemy loses 10 gems, -1 enemy dungeon
 	108: {
-		cost: 0,
+		cost: 25,
 		effect: () => ({
-
+			enemy: {
+				gems: -10,
+				dungeon: -1,
+				damage: 20
+			}
 		})
 	},
 
-	// 
+	// Spearman: If Wall > enemy Wall do 3 Damage else do 2 Damage
 	109: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			enemy: {
+				damage: (player.wall > enemy.wall) ? 3 : 2
+			}
 		})
 	},
 
-	// 
+	// Gnome: 3 Damage, +1 gem
 	110: {
-		cost: 0,
+		cost: 2,
 		effect: () => ({
-
+			active: {
+				gems: +1
+			},
+			enemy: {
+				damage: 3
+			}
 		})
 	},
 
-	// 
+	// Berserker: 8 Damage. 3 Damage to your Tower
 	111: {
-		cost: 0,
+		cost: 4,
 		effect: () => ({
-
+			active: {
+				tower: -4
+			},
+			enemy: {
+				damage: 8
+			}
 		})
 	},
 
-	// 
+	// Warlord: 13 Damage. You lose 3 gems
 	112: {
-		cost: 0,
+		cost: 13,
 		effect: () => ({
-
+			active: {
+				gems: -3
+			},
+			enemy: {
+				damage: 13
+			}
 		})
 	},
 
-	// 
+	// Pegasus Lancer: 12 Damage to enemy tower
 	113: {
-		cost: 0,
+		cost: 18,
 		effect: () => ({
-
-		})
-	},
-
-	// 
-	114: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	115: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	116: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	117: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	118: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	119: {
-		cost: 0,
-		effect: () => ({
-
-		})
-	},
-
-	// 
-	120: {
-		cost: 0,
-		effect: () => ({
-
+			enemy: {
+				tower: -12
+			}
 		})
 	}
+
 };
+/**
+ * macros for data enetering
+ *
+ * add active: 'jddOactive: {}ki				'
+ * add enemy: 'jddOenemy: {}Oi				'
+ * add both: 'jddOactive: {}ki				ja,okjddOenemy: {}Oi				kkka'
+ */
 
