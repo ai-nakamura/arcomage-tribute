@@ -82,6 +82,7 @@ function init() {
 				if (cards[playerHand[i]].effect) {
 					playCard(playerHand[i]);
 				}
+				// TODO: no new card if card can't be played
 				playerHand[i] = randomCard();
 				// sounds.mm7.tower_up.play(); // doesn't work on chrome :(
 			}

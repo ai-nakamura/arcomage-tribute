@@ -549,7 +549,7 @@ var cards = {
 			enemy: {
 				tower: -2	
 			}
-		}
+		})
 	},
 
 	// Crystal Matrix: +1 Magic, +3 Tower, +1 Enemy tower
@@ -629,12 +629,12 @@ var cards = {
 
 			if ( pMagic < eMagic ) {
 				action.active = {
-					magic: eMagic;
+					magic: eMagic
 				};
 			}
 			if ( eMagic < pMagic ) {
 				action.enemy = {
-					magic: pMagic;
+					magic: pMagic
 				};
 			}
 			return action;
@@ -670,7 +670,7 @@ var cards = {
 				magic: -1
 			},
 			enemy: {
-				tower: -8
+				tower: -9
 			}
 		})
 	},
@@ -853,7 +853,7 @@ var cards = {
 		})
 	},
 
-	// TODO Lightning Shard: If Tower > enemy Wall, 8 damage to enemy Tower, else 8 damage
+	// Lightning Shard: If Tower > enemy Wall, 8 damage to enemy Tower, else 8 damage
 	72: {
 		cost: 11,
 		effect: () => {
@@ -1146,9 +1146,9 @@ var cards = {
 		effect: () => {
 			var action = {}
 			if (player.wall > enemy.wall) {
-				action.enemy.tower: -6
+				action.enemy = { tower: -6 }
 			} else {
-				action.enemy.damage: 6
+				action.enemy = { damage: 6 }
 			}
 		}
 	},
