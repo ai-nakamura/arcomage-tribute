@@ -278,10 +278,16 @@ function draw() {
 	drawResources(8, 56, player);
 	drawResources(555, 56, enemy);
 
+	// Towers
+	drawTower(102, 297, player);
+	drawTower(494, 297, enemy);
+
+/*
 	// Cards
 	for (var index in playerHand) {
 		drawCards(locations[index][0], locations[index][1], playerHand[index]);
 	}
+	*/
 }
 
 
