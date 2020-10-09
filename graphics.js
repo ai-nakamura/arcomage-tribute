@@ -3,7 +3,11 @@ var cardHeight = 128;
 
 var sprites = {
 	//                   x    y    w    h
-	resourceBackground: [765,   0,  78, 216]
+	resourceBackground: [765,   0,  78, 216],
+	playerTower:		[384,   0,  68,  94],
+	enemyTower:			[384,  94,  68,  94],
+	column:				[892,   0,  45, 200],
+	wall:				[843,   0,  22, 200]
 };
 
 /**
@@ -22,7 +26,6 @@ function bitBlit(source, destRect, srcOffSet) {
     ctx.clip();
     ctx.drawImage(source, ...srcOffSet);
     ctx.restore();
-
 }
 
 /**
@@ -73,56 +76,54 @@ function drawResourceBackground(x, y) {
 
 /**
  * Draw tower of given player
- * @param {number} x - x coordinate of the left of tower column
- * @param {number} columnBottom - y coordinate of the BOTTOM of tower column
- * @param {active} - which player's tower to draw
+ *
+ * @param {number} left - x coordinate of the LEFT of the tower column
+ * @param {number} bottom - y coordinate of the BOTTOM of the tower column
+ * @param {object} active - which player's tower to draw
+ *
  */
-function drawTower(x, columnBottom, active) {
-	
-	// height/column of tower
-	var columnWidth = 45;
-	var columnHeight = 200;
-	var activeColumnHeight = (columnHeight / 50) * active.tower;
+function drawTower(left, bottom, active) {
 
-	var columnLeft = x;
-	var columnTop = columnBottom - activeColumnHeight;
+	var column = [...sprites.column];
+	var activeColumnHeight = (column[3] / 50) * active.tower;
+	column[3] = activeColumnHeight;
 
-	var columnSpriteOffsetX = 892;
-	var columnSpriteOffsetY = 0;
+	var columnTop = bottom - activeColumnHeight;
 
-    var columnSheetX = columnLeft - columnSpriteOffsetX;
-    var columnSheetY = columnTop - columnSpriteOffsetY;
-
-	bitBlit(
-		spriteSheet,
-		[columnLeft, columnTop, columnWidth, activeColumnHeight],
-		[columnSheetX, columnSheetY]
-	);
+	blitSprite(...column, left, columnTop);
 
 	// top of tower
-	
-    var spriteWidth = 68;
-    var spriteHeight = 94;
 
-	var towerLeft = columnLeft - 11;
+	var spriteHeight = sprites.playerTower[3];
+
+	var towerLeft = left - 11;
 	var towerTop = columnTop - spriteHeight;
 
-	var towerSpriteOffsetX = 384;
-	var towerSpriteOffsetY = 0;
-	if (active === enemy) { towerSpriteOffsetY += spriteHeight; }
+	var sprite = active === enemy ? sprites.enemyTower : sprites.playerTower;
 
-    var towerSheetX = towerLeft - towerSpriteOffsetX;
-    var towerSheetY = towerTop - towerSpriteOffsetY;
+	blitSprite(...sprite, towerLeft, towerTop);
 
-	bitBlit(
-		spriteSheet,
-		[towerLeft, towerTop, spriteWidth, spriteHeight],
-		[towerSheetX, towerSheetY]
-	);
-	
-	// console.log(`drew ${active}\'s tower`);
 }
 
+/**
+ * Draw wall of given player
+ *
+ * @param {number} left - x coordinate of the LEFT of the wall
+ * @param {number} bottom - y coordinate of the BOTTOM of the wall
+ * @param {object} active - which player's wall to draw
+ *
+ */
+function drawWall(left, bottom, active) {
+
+	var wall = [...sprites.wall];
+	var activeWallHeight = (wall[3] / 50) * active.wall;
+	wall[3] = activeWallHeight;
+
+	var top = bottom - activeWallHeight;
+
+	blitSprite(...wall, left, top);
+
+}
 
 /**
  * Draw the player's cards

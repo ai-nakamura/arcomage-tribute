@@ -41,9 +41,9 @@ function init() {
 			quarry: 20,
 			magic: 5,
 			dungeon: 2,
-			bricks: 104,
-			gems: 0,
-			recruits: 5
+			bricks: 99,
+			gems: 99,
+			recruits: 99
 		},
 		wall: 10,
 		tower: 20
@@ -282,12 +282,16 @@ function draw() {
 	drawTower(102, 297, player);
 	drawTower(494, 297, enemy);
 
-/*
+	// Walls
+	drawWall(178, 297, player);
+	drawWall(440, 297, enemy);
+
+
 	// Cards
 	for (var index in playerHand) {
 		drawCards(locations[index][0], locations[index][1], playerHand[index]);
 	}
-	*/
+
 }
 
 
