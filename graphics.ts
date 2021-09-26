@@ -1,7 +1,14 @@
-var cardWidth = 96;
-var cardHeight = 128;
+import { PlayerState, ctx, spriteSheet } from './app';
 
-var sprites = {
+type Rectangle = [number, number, number, number];
+type Point = [number, number];
+
+export var cardWidth = 96;
+export var cardHeight = 128;
+
+type SpriteName = 'resourceBackground' | 'playerTower' | 'enemyTower' | 'column' | 'wall';
+
+var sprites: Record<SpriteName, Rectangle> = {
 	//                   x    y    w    h
 	resourceBackground: [765,   0,  78, 216],
 	playerTower:		[384,   0,  68,  94],
@@ -18,7 +25,7 @@ var sprites = {
  * @param srcOffSet - x y position to draw the source in such a way that
  * 					  the desired image aligns with the rectangular region
  */
-function bitBlit(source, destRect, srcOffSet) {
+function bitBlit(source: HTMLImageElement, destRect: Rectangle, srcOffSet: Point): void {
 
     ctx.save();
     ctx.beginPath();
@@ -33,7 +40,14 @@ function bitBlit(source, destRect, srcOffSet) {
  *
  *
  */
-function blitSprite(srcX, srcY, w, h, destX, destY) {
+function blitSprite(
+    srcX: number,
+    srcY: number,
+    w: number,
+    h: number,
+    destX: number,
+    destY: number
+): void {
 
 	var sheetOffsetX = destX - srcX;
 	var sheetOffsetY = destY - srcY;
@@ -48,7 +62,7 @@ function blitSprite(srcX, srcY, w, h, destX, destY) {
  * @param {number} y - y position
  * @param {object} active - player whose resources are to be drawn
  */
-function drawResources(x, y, active) {
+export function drawResources(x: number, y: number, active: PlayerState): void {
 
     drawResourceBackground(x, y);
 
@@ -68,7 +82,7 @@ function drawResources(x, y, active) {
  * @param {number} x - x position
  * @param {number} y - y position
  */
-function drawResourceBackground(x, y) {
+function drawResourceBackground(x: number, y: number): void {
 
 	blitSprite(...sprites.resourceBackground, x, y);
 
@@ -80,11 +94,17 @@ function drawResourceBackground(x, y) {
  * @param {number} left - x coordinate of the LEFT of the tower column
  * @param {number} bottom - y coordinate of the BOTTOM of the tower column
  * @param {object} active - which player's tower to draw
+ * @param {boolean} isEnemy - whether this is the player's or enemy's tower
  *
  */
-function drawTower(left, bottom, active) {
+export function drawTower(
+    left: number,
+    bottom: number,
+    active: PlayerState,
+    isEnemy: boolean
+): void {
 
-	var column = [...sprites.column];
+	var column: Rectangle = [...sprites.column];
 	var activeColumnHeight = (column[3] / 50) * active.tower;
 	column[3] = activeColumnHeight;
 
@@ -99,7 +119,7 @@ function drawTower(left, bottom, active) {
 	var towerLeft = left - 11;
 	var towerTop = columnTop - spriteHeight;
 
-	var sprite = active === enemy ? sprites.enemyTower : sprites.playerTower;
+	var sprite = isEnemy ? sprites.enemyTower : sprites.playerTower;
 
 	blitSprite(...sprite, towerLeft, towerTop);
 
@@ -113,9 +133,9 @@ function drawTower(left, bottom, active) {
  * @param {object} active - which player's wall to draw
  *
  */
-function drawWall(left, bottom, active) {
+export function drawWall(left: number, bottom: number, active: PlayerState): void {
 
-	var wall = [...sprites.wall];
+	var wall: Rectangle = [...sprites.wall];
 	var activeWallHeight = (wall[3] / 50) * active.wall;
 	wall[3] = activeWallHeight;
 
@@ -132,7 +152,7 @@ function drawWall(left, bottom, active) {
  * @param {number} y - y coordinate of where card is to be drawn
  * @param {number} cardNum - index of card to be drawn
  */
-function drawCards(x, y, cardNum) {
+export function drawCards(x: number, y: number, cardNum: number): void {
 
     var spriteWidth = cardWidth;
     var spriteHeight = cardHeight;
@@ -153,7 +173,7 @@ function drawCards(x, y, cardNum) {
  * @param {number} y - y coordinate of where the number is to be drawn
  * @param {number} number - the number of quarry/magic/dungeon to be drawn
  */
-function drawYellowNumber(x, y, number) {
+function drawYellowNumber(x: number, y: number, number: number): void {
 
     if (number >= 10) {
         var digit = Math.floor(number / 10);
@@ -173,7 +193,7 @@ function drawYellowNumber(x, y, number) {
  * @param {number} y - y coordinate of where the digit is to be drawn
  * @param {number} digit - digit to be drawn
  */
-function drawYellowDigit(x, y, digit) {
+function drawYellowDigit(x: number, y: number, digit: number): void {
 
     var spriteWidth = 22;
     var spriteHeight = 17;
@@ -196,7 +216,7 @@ function drawYellowDigit(x, y, digit) {
  * @param {number} number - the number of individual resources to be drawn
  * @param {string} resource - type of digit to use
  */
-function drawBlackNumber(x, y, number, resource) {
+function drawBlackNumber(x: number, y: number, number: number, resource: string): void {
 
     if (number >= 10) {
         var digit = Math.floor(number / 10);
@@ -217,7 +237,7 @@ function drawBlackNumber(x, y, number, resource) {
  * @param {number} digit - digit to be drawn
  * @param {string} resource - type of digit to use
  */
-function drawBlackDigit(x, y, digit, resource) {
+function drawBlackDigit(x: number, y: number, digit: number, resource: string): void {
 
     var spriteWidth = 13;
     var spriteHeight = 10;
