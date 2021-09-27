@@ -1,22 +1,55 @@
+import { Action, PlayerAction, cards, sounds } from './data';
+import {
+    cardHeight,
+    cardWidth,
+    drawCards,
+    drawResources,
+    drawTower,
+    drawWall
+} from './graphics';
+
+
+// Types
+export type PlayerState = {
+    resources: {
+        bricks: number
+        gems: number
+        recruits: number
+
+        quarry: number
+        magic: number
+        dungeon: number
+    }
+
+    tower: number
+    wall: number
+};
+
+
 // Constants
-var PLAYER_TURN = 0;
-var ENEMY_TURN = 1;
+var PLAYER_TURN = 0 as const;
+var ENEMY_TURN = 1 as const;
 
 
 // Variables
-var canvas, ctx, bg, spriteSheet, locations, playerHand;
+var locations: number[][];
+var playerHand: number[];
+var bg: HTMLImageElement;
+export var spriteSheet: HTMLImageElement;
+var canvas: HTMLCanvasElement;
+export var ctx: CanvasRenderingContext2D;
 
-var turn;
+var turn: typeof PLAYER_TURN | typeof ENEMY_TURN;
 
-var player;
-var enemy;
+var player: PlayerState;
+var enemy: PlayerState;
 
 
 //
 // Init
 //
 
-function main() {
+function main(): void {
 
 	// technically this could be set up with async and wait,
 	// but that's a lessons for another day
@@ -25,7 +58,7 @@ function main() {
 			bg: 'Original game assets/Layout.bmp',
 			spriteSheet: 'Original game assets/SPRITES.png',
 		},
-		function(results) {
+		function(results: Record<string, HTMLImageElement>) {
 			bg = results.bg;
 			spriteSheet = results.spriteSheet;
 			init();
@@ -43,7 +76,10 @@ main();
  * @param {function} onDone - function to be called when loading is done
  *                            it will be called with the value of "results"
  */
-function loadImages(images, onDone) {
+function loadImages(
+    images: Record<string, string>,
+    onDone: (results: Record<string, HTMLImageElement>) => void
+): void {
 
 	// Dictionary from image name to Image.
 	var results = {};
@@ -55,7 +91,7 @@ function loadImages(images, onDone) {
 		totalToLoad += 1;
 	}
 
-	function makeImage(name, src) {
+	function makeImage(name: string, src: string): void {
 		var img = new Image;
 
 		img.addEventListener('load', function() {
@@ -68,7 +104,7 @@ function loadImages(images, onDone) {
 			}
 		});
 
-		img.addEventListener('error', function(error) {
+		img.addEventListener('error', function(error: unknown) {
 			console.error('Error loading image', src, error);
 		});
 
@@ -82,10 +118,10 @@ function loadImages(images, onDone) {
 
 }
 
-function init() {
+function init(): void {
 
 	// initialize variables
-	canvas = document.getElementById("canvas");
+	canvas = document.getElementById("canvas") as HTMLCanvasElement;
 	ctx = canvas.getContext("2d");
 
 	locations = [
@@ -172,7 +208,7 @@ function init() {
  * Game loop. After being called the first time, it is called 60 times per
  * second because of requestAnimationFrame().
  */
-function loop() {
+function loop(): void {
 
 	update();
 	draw();
@@ -189,7 +225,7 @@ function loop() {
 /**
  * Updates game state for each new frame. Called once per frame.
  */
-function update() {
+function update(): void {
 	switch (turn) {
 		case PLAYER_TURN:
 			// TODO
@@ -201,7 +237,7 @@ function update() {
 	}
 }
 
-function nextTurn() {
+function nextTurn(): void {
 	var active;
 	switch (turn) {
 		case PLAYER_TURN:
@@ -220,7 +256,7 @@ function nextTurn() {
 	active.resources.recruits += active.resources.dungeon;
 }
 
-function takeTurn() {
+function takeTurn(): void {
 }
 
 
@@ -231,7 +267,7 @@ function takeTurn() {
 /**
  * Draw a frame
  */
-function draw() {
+function draw(): void {
 
 	// Draw background.
 	ctx.drawImage(bg, 0, 0);
@@ -241,8 +277,8 @@ function draw() {
 	drawResources(555, 56, enemy);
 
 	// Towers
-	drawTower(102, 297, player);
-	drawTower(494, 297, enemy);
+	drawTower(102, 297, player, false);
+	drawTower(494, 297, enemy, true);
 
 	// Walls
 	drawWall(178, 297, player);
@@ -260,9 +296,9 @@ function draw() {
 // Input handlers
 //
 
-function playCard(cardNumber) {
+function playCard(cardNumber: number): void {
 
-	var action = cards[cardNumber].effect();
+	var action = cards[cardNumber].effect(player, enemy);
 
 	if (!canPlay(cardNumber)) {
 		console.log('Not enough resources! Maybe next turn :(');
@@ -291,7 +327,7 @@ function playCard(cardNumber) {
 		applyPlayerAction(enemy, action.enemy);
 	}
 
-	if (action.play_again) {
+	if (action.playAgain) {
 		// TODO
 	}
 
@@ -300,7 +336,7 @@ function playCard(cardNumber) {
 
 }
 
-function applyPlayerAction(player, action) {
+function applyPlayerAction(player: PlayerState, action: PlayerAction): void {
 
 	var r = player.resources;
 
@@ -353,7 +389,7 @@ function applyPlayerAction(player, action) {
  *
  * @returns {number} - card number to select
  */
-function randomCard() {
+function randomCard(): number {
 
 	var color = Math.floor(Math.random() * 3) * 40;
 	var card = Math.floor(Math.random() * 34);
@@ -361,13 +397,13 @@ function randomCard() {
 
 }
 
-function cardColor(cardNumber) {
+function cardColor(cardNumber: number): number {
 
 	return Math.floor(cardNumber / 40);
 
 }
 
-function canPlay(cardNumber) {
+function canPlay(cardNumber: number): boolean {
 
 	var card = cards[cardNumber];
 	var cost = card.cost;

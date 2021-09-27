@@ -1,95 +1,94 @@
+import { PlayerState } from './app';
 
-var sounds = {
-	archmage: {
+export var sounds = {
+	arcomage: {
 		damage:			new Audio('Sounds/Archmage/damage.wav'),
 		deal:			new Audio('Sounds/Archmage/deal.wav'),
 		defeat:			new Audio('Sounds/Archmage/defeat.wav'),
-		quarry_down:	new Audio('Sounds/Archmage/quarry_down.wav'),
+		quarryDown:		new Audio('Sounds/Archmage/quarry_down.wav'),
 		shuffle:		new Audio('Sounds/Archmage/shuffle.wav'),
 		start:			new Audio('Sounds/Archmage/start.wav'),
-		tower_up:		new Audio('Sounds/Archmage/tower_up.wav'),
+		towerUp:		new Audio('Sounds/Archmage/tower_up.wav'),
 		typing:			new Audio('Sounds/Archmage/typing.wav'),
 		victory:		new Audio('Sounds/Archmage/victory.wav'),
 	},
 
 	mm7: {
-		bricks_down:	new Audio('Sounds/Might and Magic 7/bricks down.wav'),
-		bricks_up:		new Audio('Sounds/Might and Magic 7/bricks up.wav'),
+		bricksDown:		new Audio('Sounds/Might and Magic 7/bricks down.wav'),
+		bricksUp:		new Audio('Sounds/Might and Magic 7/bricks up.wav'),
 		damage:			new Audio('Sounds/Might and Magic 7/damage.wav'),
 		deal:			new Audio('Sounds/Might and Magic 7/deal.wav'),
 		defeat:			new Audio('Sounds/Might and Magic 7/defeat.wav'),
-		quarry_down:	new Audio('Sounds/Might and Magic 7/quarry down.wav'),
-		quarry_up:		new Audio('Sounds/Might and Magic 7/quarry up.wav'),
+		quarryDown:		new Audio('Sounds/Might and Magic 7/quarry down.wav'),
+		quarryUp:		new Audio('Sounds/Might and Magic 7/quarry up.wav'),
 		shuffle:		new Audio('Sounds/Might and Magic 7/shuffle.wav'),
-		tower_up:		new Audio('Sounds/Might and Magic 7/tower up.wav'),
+		towerUp:		new Audio('Sounds/Might and Magic 7/tower up.wav'),
 		typing:			new Audio('Sounds/Might and Magic 7/typing.wav'),
 		victory:		new Audio('Sounds/Might and Magic 7/victory.wav'),
-		wall_up:		new Audio('Sounds/Might and Magic 7/wall up.wav'),
+		wallUp:			new Audio('Sounds/Might and Magic 7/wall up.wav'),
 	},
 
 	mm8: {
-		bricks_down:	new Audio('Sounds/Might and Magic 8/bricks down.wav'),
-		bricks_up:		new Audio('Sounds/Might and Magic 8/bricks up.wav'),
+		bricksDown:		new Audio('Sounds/Might and Magic 8/bricks down.wav'),
+		bricksUp:		new Audio('Sounds/Might and Magic 8/bricks up.wav'),
 		damage:			new Audio('Sounds/Might and Magic 8/damage.wav'),
 		deal:			new Audio('Sounds/Might and Magic 8/deal.wav'),
 		defeat:			new Audio('Sounds/Might and Magic 8/defeat.wav'),
-		quarry_down:	new Audio('Sounds/Might and Magic 8/quarry down.wav'),
-		quarry_up:		new Audio('Sounds/Might and Magic 8/quarry up.wav'),
+		quarryDown:		new Audio('Sounds/Might and Magic 8/quarry down.wav'),
+		quarryUp:		new Audio('Sounds/Might and Magic 8/quarry up.wav'),
 		shuffle:		new Audio('Sounds/Might and Magic 8/shuffle.wav'),
-		tower_up:		new Audio('Sounds/Might and Magic 8/tower up.wav'),
+		towerUp:		new Audio('Sounds/Might and Magic 8/tower up.wav'),
 		typing:			new Audio('Sounds/Might and Magic 8/typing.wav'),
 		victory:		new Audio('Sounds/Might and Magic 8/victory.wav'),
 
-		wall_up:		new Audio('Sounds/Might and Magic 8/wall up.wav'),
+		wallUp:			new Audio('Sounds/Might and Magic 8/wall up.wav'),
 	}
 
 
+} as const;
+
+type Card = {
+    cost: number
+    effect: (active: PlayerState, enemy: PlayerState) => Action;
+};
+export type Action = {
+    active?: PlayerAction
+    enemy?: PlayerAction
+    playAgain?: boolean
 };
 
-var cards = {
+export type PlayerAction = {
+    bricks?: number
+    gems?: number
+    recruits?: number
 
-	/**
-	 *
-	 * interface Actions {
-	 *     cost: number
-     *     effect: () => {
-	 *         active: Player
-	 *         enemy: Player
-	 *         play_again: boolean
-     *     }
-	 * }
-	 *
-	 * interface Player {
-	 *
-	 *     bricks: number
-	 *     gems: number
-	 *     recruits: number
-	 *
-	 *     quarry: number
-	 *     magic: number
-	 *     dungeon: number
-	 *
-	 *     tower: number
-	 *     wall: number
-	 *     damage: number
-	 *
-	 */
+    quarry?: number
+    magic?: number
+    dungeon?: number
+
+    tower?: number
+    wall?: number
+    damage?: number
+};
+
+export var cards: Record<number, Card> = {
+
 	/***************************************/
 	/*                                     */
 	/*             RED CARDS               */
 	/*                                     */
 	/***************************************/
- 
+
     // Brick Shortage: All players lose 8 bricks
 	0: {
 		cost: 0,
 		effect: () => ({
 			active: {
 				bricks: -8
-				},
+            },
 			enemy: {
 				bricks: -8
-				},
+            },
 		})
 	},
 
@@ -101,7 +100,7 @@ var cards = {
 				bricks: +2,
 				gems: +2
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -110,7 +109,7 @@ var cards = {
 		cost: 1,
 		effect: () => ({
 			active: { wall: +1 },
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -127,10 +126,10 @@ var cards = {
 	// Mother Lode: if ( quarry < enemy quarry ) { +2 quarry } else { +1 quarry }
 	4: {
 		cost: 4,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			active: {
 				quarry:
-					player.resources.quarry < enemy.resources.quarry ? +2 : +1
+					active.resources.quarry < enemy.resources.quarry ? +2 : +1
 			},
 		})
 	},
@@ -160,10 +159,10 @@ var cards = {
 	// Copping the Tech: if ( quarry < enemy quarry ) {quarry = enemy quarry}
 	7: {
 		cost: 5,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			active: {
 				quarry:
-					player.resources.quarry < enemy.resources.quarry
+					active.resources.quarry < enemy.resources.quarry
 						? enemy.resources.quarry : 0
 			}
 		})
@@ -199,16 +198,16 @@ var cards = {
 			},
 			enemy: {
 				quarry: +1
-				}
+            }
 		})
 	},
 
 	// Foundations: if ( wall==0 ) { +6 Wall } else { +3 Wall }
 	11: {
 		cost: 3,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			active: {
-				wall: player.wall === 0 ? +6 : +3
+				wall: active.wall === 0 ? +6 : +3
 			}
 		})
 	},
@@ -223,7 +222,7 @@ var cards = {
 			enemy: {
 				wall: -5
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -234,7 +233,7 @@ var cards = {
 			active: {
 				magic: +1
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -417,15 +416,15 @@ var cards = {
 	// Flood Water: Player(s) w/lowest Wall are -1 Dungeon and 2 damage to Tower
 	30: {
 		cost: 6,
-		effect: () => {
-			var action = {};
-			if (player.wall <= enemy.wall) {
+		effect: (active, enemy) => {
+			var action: Action = {};
+			if (active.wall <= enemy.wall) {
 				action.active = {
 					dungeon: -1,
 					tower: -2
 				};
 			}
-			if (enemy.wall <= player.wall) {
+			if (enemy.wall <= active.wall) {
 				action.enemy = {
 					dungeon: -1,
 					tower: -2
@@ -438,11 +437,11 @@ var cards = {
 	// Barracks: +6 recruits, +6 Wall, If dungeon < enemy dungeon, +1 dungeon
 	31: {
 		cost: 10,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			active: {
 				recruits: +6,
 				wall: +6,
-				dungeon: player.resources.dungeon < enemy.resources.dungeon ? +1 : 0
+				dungeon: active.resources.dungeon < enemy.resources.dungeon ? +1 : 0
 			}
 		})
 	},
@@ -463,12 +462,12 @@ var cards = {
 	// Shift: Switch your Wall with enemy Wall
 	33: {
 		cost: 17,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			active: {
-				wall: enemy.wall - player.wall
+				wall: enemy.wall - active.wall
 			},
 			enemy: {
-				wall: player.wall - enemy.wall
+				wall: active.wall - enemy.wall
 			}
 		})
 	},
@@ -484,9 +483,9 @@ var cards = {
 		cost: 1,
 		effect: () => ({
 			active: {
-				Tower: +1
+				tower: +1
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -497,7 +496,7 @@ var cards = {
 			enemy: {
 				tower: -1
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -525,7 +524,7 @@ var cards = {
 	44: {
 		cost: 2,
 		effect: () => ({
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -622,9 +621,9 @@ var cards = {
 	// Parity: All player's magic equals the highest player's magic
 	53: {
 		cost: 7,
-		effect: () => {
-			var action = {};
-			var pMagic = player.resources.magic;
+		effect: (active, enemy) => {
+			var action: Action = {};
+			var pMagic = active.resources.magic;
 			var eMagic = enemy.resources.magic;
 
 			if ( pMagic < eMagic ) {
@@ -818,9 +817,9 @@ var cards = {
 	// Bag of Baubles: If Tower < enemy Tower +2 Tower, else +1 Tower
 	69: {
 		cost: 0,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			active: {
-				tower: (player.tower < enemy.tower) ? +2 : +1
+				tower: (active.tower < enemy.tower) ? +2 : +1
 			}
 		})
 	},
@@ -856,9 +855,9 @@ var cards = {
 	// Lightning Shard: If Tower > enemy Wall, 8 damage to enemy Tower, else 8 damage
 	72: {
 		cost: 11,
-		effect: () => {
-			var action = {};
-			if (player.tower > enemy.wall) {
+		effect: (active, enemy) => {
+			var action: Action = {};
+			if (active.tower > enemy.wall) {
 				action.enemy = {
 					tower: -8
 				};
@@ -909,7 +908,7 @@ var cards = {
 			enemy: {
 				damage: 2
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -940,7 +939,7 @@ var cards = {
 	84: {
 		cost: 2,
 		effect: () => ({
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -977,7 +976,7 @@ var cards = {
 			enemy: {
 				tower: -2
 			},
-			play_again: true
+			playAgain: true
 		})
 	},
 
@@ -1103,7 +1102,7 @@ var cards = {
 	// Spizzer: If enemy wall = 0, 10 damage, else 6 damage
 	98: {
 		cost: 8,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			enemy: {
 				damage: (enemy.wall === 0) ? 10 : 6
 			}
@@ -1123,7 +1122,7 @@ var cards = {
 	// Corrosion Cloud: If enemy wall > 0, 10 damage, else 7 damage
 	100: {
 		cost: 11,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			enemy: {
 				damage: (enemy.wall > 0) ? 10 : 7
 			}
@@ -1133,9 +1132,9 @@ var cards = {
 	// Unicorn: If magic > enemy magic, 12 damage, else 8 damage
 	101: {
 		cost: 9,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			enemy: {
-				damage: (enemy.wall > 0) ? 10 : 7
+				damage: (active.resources.magic > enemy.resources.magic) ? 12 : 8
 			}
 		})
 	},
@@ -1143,13 +1142,14 @@ var cards = {
 	// Elven Archers: If wall > enemy wall, 6 damage to enemy tower, else 6 damage
 	102: {
 		cost: 10,
-		effect: () => {
-			var action = {}
-			if (player.wall > enemy.wall) {
+		effect: (active, enemy) => {
+			var action: Action = {}
+			if (active.wall > enemy.wall) {
 				action.enemy = { tower: -6 }
 			} else {
 				action.enemy = { damage: 6 }
 			}
+            return action
 		}
 	},
 
@@ -1175,7 +1175,7 @@ var cards = {
 		})
 	},
 
-	// TODO: Thief: Enemy loses 10 gems, 5 bricks, you gan 1/2 amt. round up
+	// TODO: Thief: Enemy loses 10 gems, 5 bricks, you gain 1/2 amt. round up
 	105: {
 		cost: 12,
 		effect: () => ({
@@ -1223,9 +1223,9 @@ var cards = {
 	// Spearman: If Wall > enemy Wall do 3 Damage else do 2 Damage
 	109: {
 		cost: 2,
-		effect: () => ({
+		effect: (active, enemy) => ({
 			enemy: {
-				damage: (player.wall > enemy.wall) ? 3 : 2
+				damage: (active.wall > enemy.wall) ? 3 : 2
 			}
 		})
 	},
