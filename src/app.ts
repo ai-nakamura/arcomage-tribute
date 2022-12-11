@@ -51,7 +51,7 @@ var enemy: PlayerState;
 
 function main(): void {
 
-	// technically this could be set up with async and wait,
+	// technically this could be set up with async and await,
 	// but that's a lessons for another day
 	loadImages(
 		{
@@ -115,7 +115,6 @@ function loadImages(
 		var src = images[name];
 		makeImage(name, src);
 	}
-
 }
 
 function init(): void {
@@ -201,7 +200,6 @@ function init(): void {
 	});
 
 	loop();
-
 }
 
 /**
@@ -317,8 +315,6 @@ function playCard(cardNumber: number): void {
 			break;
 	}
 
-	//sounds.mm7.tower_up.play();  // doesn't work on Chrome :(
-
 	if (action.active) {
 		applyPlayerAction(player, action.active);
 	}
@@ -336,6 +332,11 @@ function playCard(cardNumber: number): void {
 
 }
 
+function play(snd: HTMLAudioElement): void {
+	snd.currentTime = 0;
+	snd.play();
+}
+
 function applyPlayerAction(player: PlayerState, action: PlayerAction): void {
 
 	var r = player.resources;
@@ -349,6 +350,12 @@ function applyPlayerAction(player: PlayerState, action: PlayerAction): void {
 	if (action.recruits) {
 		r.recruits = Math.max(0, r.recruits + action.recruits);
 	}
+	if (action.bricks > 0 || action.gems > 0 || action.recruits > 0) {
+		play(sounds.mm7.bricksUp);
+	}
+	else if (action.bricks < 0 || action.gems < 0 || action.recruits < 0) {
+		play(sounds.mm7.bricksDown);
+	}
 
 	if (action.quarry) {
 		r.quarry = Math.max(0, r.quarry + action.quarry);
@@ -359,12 +366,20 @@ function applyPlayerAction(player: PlayerState, action: PlayerAction): void {
 	if (action.dungeon) {
 		r.dungeon = Math.max(0, r.dungeon + action.dungeon);
 	}
+	if (action.quarry > 0 || action.magic > 0 || action.dungeon > 0) {
+		play(sounds.mm7.quarryUp);
+	}
+	else if (action.quarry < 0 || action.magic < 0 || action.dungeon < 0) {
+		play(sounds.mm7.quarryDown);
+	}
 
 	if (action.tower) {
 		player.tower += action.tower;
+		play(action.tower > 0 ? sounds.mm7.towerUp : sounds.mm7.damage);
 	}
 	if (action.wall) {
 		player.wall += action.wall;
+		play(action.wall > 0 ? sounds.mm7.wallUp : sounds.mm7.damage);
 	}
 	if (action.damage) {
 		player.wall -= action.damage;
@@ -372,6 +387,7 @@ function applyPlayerAction(player: PlayerState, action: PlayerAction): void {
 			player.tower += player.wall;
 			player.wall = 0;
 		}
+		play(sounds.mm7.damage);
 	}
 
 	player.wall = Math.max(0, player.wall);

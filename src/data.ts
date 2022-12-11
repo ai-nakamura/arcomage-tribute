@@ -14,18 +14,19 @@ export var sounds = {
 	},
 
 	mm7: {
-		bricksDown:		new Audio('Sounds/Might and Magic 7/bricks down.wav'),
-		bricksUp:		new Audio('Sounds/Might and Magic 7/bricks up.wav'),
-		damage:			new Audio('Sounds/Might and Magic 7/damage.wav'),
-		deal:			new Audio('Sounds/Might and Magic 7/deal.wav'),
-		defeat:			new Audio('Sounds/Might and Magic 7/defeat.wav'),
-		quarryDown:		new Audio('Sounds/Might and Magic 7/quarry down.wav'),
-		quarryUp:		new Audio('Sounds/Might and Magic 7/quarry up.wav'),
-		shuffle:		new Audio('Sounds/Might and Magic 7/shuffle.wav'),
-		towerUp:		new Audio('Sounds/Might and Magic 7/tower up.wav'),
-		typing:			new Audio('Sounds/Might and Magic 7/typing.wav'),
-		victory:		new Audio('Sounds/Might and Magic 7/victory.wav'),
-		wallUp:			new Audio('Sounds/Might and Magic 7/wall up.wav'),
+		bricksDown:		new Audio('Sounds/Might and Magic 7/bricks down.mp3'),
+		bricksUp:		new Audio('Sounds/Might and Magic 7/bricks up.mp3'),
+		damage:			new Audio('Sounds/Might and Magic 7/damage.mp3'),
+		deal:			new Audio('Sounds/Might and Magic 7/deal.mp3'),
+		defeat:			new Audio('Sounds/Might and Magic 7/defeat.mp3'),
+		// quarryDown and quarryUp are misnamed in the original files so we're flipping them
+		quarryDown:		new Audio('Sounds/Might and Magic 7/quarry up.mp3'),
+		quarryUp:		new Audio('Sounds/Might and Magic 7/quarry down.mp3'),
+		shuffle:		new Audio('Sounds/Might and Magic 7/shuffle.mp3'),
+		towerUp:		new Audio('Sounds/Might and Magic 7/tower up.mp3'),
+		typing:			new Audio('Sounds/Might and Magic 7/typing.mp3'),
+		victory:		new Audio('Sounds/Might and Magic 7/victory.mp3'),
+		wallUp:			new Audio('Sounds/Might and Magic 7/wall up.mp3'),
 	},
 
 	mm8: {
@@ -34,13 +35,13 @@ export var sounds = {
 		damage:			new Audio('Sounds/Might and Magic 8/damage.wav'),
 		deal:			new Audio('Sounds/Might and Magic 8/deal.wav'),
 		defeat:			new Audio('Sounds/Might and Magic 8/defeat.wav'),
-		quarryDown:		new Audio('Sounds/Might and Magic 8/quarry down.wav'),
-		quarryUp:		new Audio('Sounds/Might and Magic 8/quarry up.wav'),
+		// quarryDown and quarryUp are misnamed in the original files so we're flipping them
+		quarryDown:		new Audio('Sounds/Might and Magic 8/quarry up.wav'),
+		quarryUp:		new Audio('Sounds/Might and Magic 8/quarry down.wav'),
 		shuffle:		new Audio('Sounds/Might and Magic 8/shuffle.wav'),
 		towerUp:		new Audio('Sounds/Might and Magic 8/tower up.wav'),
 		typing:			new Audio('Sounds/Might and Magic 8/typing.wav'),
 		victory:		new Audio('Sounds/Might and Magic 8/victory.wav'),
-
 		wallUp:			new Audio('Sounds/Might and Magic 8/wall up.wav'),
 	}
 
@@ -51,6 +52,7 @@ type Card = {
     cost: number
     effect: (active: PlayerState, enemy: PlayerState) => Action;
 };
+
 export type Action = {
     active?: PlayerAction
     enemy?: PlayerAction
@@ -1283,8 +1285,14 @@ export var cards: Record<number, Card> = {
 /**
  * macros for data enetering
  *
- * add active: 'jddOactive: {}ki				'
- * add enemy: 'jddOenemy: {}Oi				'
- * add both: 'jddOactive: {}ki				ja,okjddOenemy: {}Oi				kkka'
+ * add active: 'jddOactive: {
+
+}ki				'
+ * add enemy: 'jddOenemy: {
+}Oi				'
+ * add both: 'jddOactive: {
+
+}ki				ja,okjddOenemy: {
+}Oi				kkka'
  */
 
