@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Build backend
-        run: cd backend && npm install && npm run compile
+        run: cd backend && npm install && npm run format && npm run compile
 
       - name: Build frontend
-        run: cd frontend && npm install && npm run compile
+        run: cd frontend && npm install && npm run format && npm run compile
