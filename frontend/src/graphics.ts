@@ -1,4 +1,4 @@
-import { PlayerState, ctx, spriteSheet } from './app';
+import { PlayerState, ctx, spriteSheet } from "./app";
 
 type Rectangle = [number, number, number, number];
 type Point = [number, number];
@@ -6,15 +6,20 @@ type Point = [number, number];
 export var cardWidth = 96;
 export var cardHeight = 128;
 
-type SpriteName = 'resourceBackground' | 'playerTower' | 'enemyTower' | 'column' | 'wall';
+type SpriteName =
+  | "resourceBackground"
+  | "playerTower"
+  | "enemyTower"
+  | "column"
+  | "wall";
 
 var sprites: Record<SpriteName, Rectangle> = {
-	//                   x    y    w    h
-	resourceBackground: [765,   0,  78, 216],
-	playerTower:		[384,   0,  68,  94],
-	enemyTower:			[384,  94,  68,  94],
-	column:				[892,   0,  45, 200],
-	wall:				[843,   0,  22, 200]
+  //                   x    y    w    h
+  resourceBackground: [765, 0, 78, 216],
+  playerTower: [384, 0, 68, 94],
+  enemyTower: [384, 94, 68, 94],
+  column: [892, 0, 45, 200],
+  wall: [843, 0, 22, 200],
 };
 
 /**
@@ -23,16 +28,19 @@ var sprites: Record<SpriteName, Rectangle> = {
  * @param source - source material that contiains the desired image
  * @param destRect - rectangular region to draw the image
  * @param srcOffSet - x y position to draw the source in such a way that
- * 					  the desired image aligns with the rectangular region
+ *                      the desired image aligns with the rectangular region
  */
-function bitBlit(source: HTMLImageElement, destRect: Rectangle, srcOffSet: Point): void {
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(...destRect);
-    ctx.clip();
-    ctx.drawImage(source, ...srcOffSet);
-    ctx.restore();
+function bitBlit(
+  source: HTMLImageElement,
+  destRect: Rectangle,
+  srcOffSet: Point
+): void {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(...destRect);
+  ctx.clip();
+  ctx.drawImage(source, ...srcOffSet);
+  ctx.restore();
 }
 
 /**
@@ -41,19 +49,17 @@ function bitBlit(source: HTMLImageElement, destRect: Rectangle, srcOffSet: Point
  *
  */
 function blitSprite(
-    srcX: number,
-    srcY: number,
-    w: number,
-    h: number,
-    destX: number,
-    destY: number
+  srcX: number,
+  srcY: number,
+  w: number,
+  h: number,
+  destX: number,
+  destY: number
 ): void {
+  var sheetOffsetX = destX - srcX;
+  var sheetOffsetY = destY - srcY;
 
-	var sheetOffsetX = destX - srcX;
-	var sheetOffsetY = destY - srcY;
-
-	bitBlit(spriteSheet, [destX, destY, w, h], [sheetOffsetX, sheetOffsetY]);
-
+  bitBlit(spriteSheet, [destX, destY, w, h], [sheetOffsetX, sheetOffsetY]);
 }
 
 /**
@@ -63,19 +69,16 @@ function blitSprite(
  * @param {object} active - player whose resources are to be drawn
  */
 export function drawResources(x: number, y: number, active: PlayerState): void {
+  drawResourceBackground(x, y);
 
-    drawResourceBackground(x, y);
+  drawYellowNumber(x + 6, y + 36, active.resources.quarry);
+  drawYellowNumber(x + 6, y + 108, active.resources.magic);
+  drawYellowNumber(x + 6, y + 180, active.resources.dungeon);
 
-    drawYellowNumber(x + 6, y + 36, active.resources.quarry);
-    drawYellowNumber(x + 6, y + 108, active.resources.magic);
-    drawYellowNumber(x + 6, y + 180, active.resources.dungeon);
-
-    drawBlackNumber(x + 3, y + 58, active.resources.bricks, "bricks");
-    drawBlackNumber(x + 3, y + 130, active.resources.gems, "gems");
-    drawBlackNumber(x + 3, y + 202, active.resources.recruits, "recruits");
-
+  drawBlackNumber(x + 3, y + 58, active.resources.bricks, "bricks");
+  drawBlackNumber(x + 3, y + 130, active.resources.gems, "gems");
+  drawBlackNumber(x + 3, y + 202, active.resources.recruits, "recruits");
 }
-
 
 /**
  * Draw a resource background
@@ -83,9 +86,7 @@ export function drawResources(x: number, y: number, active: PlayerState): void {
  * @param {number} y - y position
  */
 function drawResourceBackground(x: number, y: number): void {
-
-	blitSprite(...sprites.resourceBackground, x, y);
-
+  blitSprite(...sprites.resourceBackground, x, y);
 }
 
 /**
@@ -98,31 +99,29 @@ function drawResourceBackground(x: number, y: number): void {
  *
  */
 export function drawTower(
-    left: number,
-    bottom: number,
-    active: PlayerState,
-    isEnemy: boolean
+  left: number,
+  bottom: number,
+  active: PlayerState,
+  isEnemy: boolean
 ): void {
+  var column: Rectangle = [...sprites.column];
+  var activeColumnHeight = (column[3] / 50) * active.tower;
+  column[3] = activeColumnHeight;
 
-	var column: Rectangle = [...sprites.column];
-	var activeColumnHeight = (column[3] / 50) * active.tower;
-	column[3] = activeColumnHeight;
+  var columnTop = bottom - activeColumnHeight;
 
-	var columnTop = bottom - activeColumnHeight;
+  blitSprite(...column, left, columnTop);
 
-	blitSprite(...column, left, columnTop);
+  // top of tower
 
-	// top of tower
+  var spriteHeight = sprites.playerTower[3];
 
-	var spriteHeight = sprites.playerTower[3];
+  var towerLeft = left - 11;
+  var towerTop = columnTop - spriteHeight;
 
-	var towerLeft = left - 11;
-	var towerTop = columnTop - spriteHeight;
+  var sprite = isEnemy ? sprites.enemyTower : sprites.playerTower;
 
-	var sprite = isEnemy ? sprites.enemyTower : sprites.playerTower;
-
-	blitSprite(...sprite, towerLeft, towerTop);
-
+  blitSprite(...sprite, towerLeft, towerTop);
 }
 
 /**
@@ -133,16 +132,18 @@ export function drawTower(
  * @param {object} active - which player's wall to draw
  *
  */
-export function drawWall(left: number, bottom: number, active: PlayerState): void {
+export function drawWall(
+  left: number,
+  bottom: number,
+  active: PlayerState
+): void {
+  var wall: Rectangle = [...sprites.wall];
+  var activeWallHeight = (wall[3] / 50) * active.wall;
+  wall[3] = activeWallHeight;
 
-	var wall: Rectangle = [...sprites.wall];
-	var activeWallHeight = (wall[3] / 50) * active.wall;
-	wall[3] = activeWallHeight;
+  var top = bottom - activeWallHeight;
 
-	var top = bottom - activeWallHeight;
-
-	blitSprite(...wall, left, top);
-
+  blitSprite(...wall, left, top);
 }
 
 /**
@@ -153,18 +154,16 @@ export function drawWall(left: number, bottom: number, active: PlayerState): voi
  * @param {number} cardNum - index of card to be drawn
  */
 export function drawCards(x: number, y: number, cardNum: number): void {
+  var spriteWidth = cardWidth;
+  var spriteHeight = cardHeight;
 
-    var spriteWidth = cardWidth;
-    var spriteHeight = cardHeight;
+  var spriteOffsetX = 0 + spriteWidth * (cardNum % 10);
+  var spriteOffsetY = 220 + spriteHeight * Math.floor(cardNum / 10);
 
-    var spriteOffsetX = 0 + spriteWidth * (cardNum % 10);
-    var spriteOffsetY = 220 + spriteHeight * Math.floor(cardNum / 10);
+  var sheetX = x - spriteOffsetX;
+  var sheetY = y - spriteOffsetY;
 
-    var sheetX = x - spriteOffsetX;
-    var sheetY = y - spriteOffsetY;
-
-    bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
-
+  bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
 }
 
 /**
@@ -174,17 +173,15 @@ export function drawCards(x: number, y: number, cardNum: number): void {
  * @param {number} number - the number of quarry/magic/dungeon to be drawn
  */
 function drawYellowNumber(x: number, y: number, number: number): void {
+  if (number >= 10) {
+    var digit = Math.floor(number / 10);
+    drawYellowDigit(x, y, digit);
 
-    if (number >= 10) {
-        var digit = Math.floor(number / 10);
-        drawYellowDigit(x, y, digit);
+    x += 22;
+    number %= 10;
+  }
 
-        x += 22;
-        number %= 10;
-    }
-
-    drawYellowDigit(x, y, number);
-
+  drawYellowDigit(x, y, number);
 }
 
 /**
@@ -194,19 +191,17 @@ function drawYellowNumber(x: number, y: number, number: number): void {
  * @param {number} digit - digit to be drawn
  */
 function drawYellowDigit(x: number, y: number, digit: number): void {
+  var spriteWidth = 22;
+  var spriteHeight = 17;
 
-    var spriteWidth = 22;
-    var spriteHeight = 17;
+  var spriteOffsetX = 192 + spriteWidth * digit;
+  var spriteOffsetY = 190;
 
-    var spriteOffsetX = 192 + spriteWidth * digit;
-    var spriteOffsetY = 190;
+  var sheetX = x - spriteOffsetX;
+  var sheetY = y - spriteOffsetY;
 
-    var sheetX = x - spriteOffsetX;
-    var sheetY = y - spriteOffsetY;
-
-    // FIXME: Make darker.
-    bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
-
+  // FIXME: Make darker.
+  bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
 }
 
 /**
@@ -216,18 +211,21 @@ function drawYellowDigit(x: number, y: number, digit: number): void {
  * @param {number} number - the number of individual resources to be drawn
  * @param {string} resource - type of digit to use
  */
-function drawBlackNumber(x: number, y: number, number: number, resource: string): void {
+function drawBlackNumber(
+  x: number,
+  y: number,
+  number: number,
+  resource: string
+): void {
+  if (number >= 10) {
+    var digit = Math.floor(number / 10);
+    drawBlackDigit(x, y, digit, resource);
 
-    if (number >= 10) {
-        var digit = Math.floor(number / 10);
-        drawBlackDigit(x, y, digit, resource);
+    x += 13;
+    number %= 10;
+  }
 
-        x += 13;
-        number %= 10;
-    }
-
-    drawBlackDigit(x, y, number, resource);
-
+  drawBlackDigit(x, y, number, resource);
 }
 
 /**
@@ -237,20 +235,30 @@ function drawBlackNumber(x: number, y: number, number: number, resource: string)
  * @param {number} digit - digit to be drawn
  * @param {string} resource - type of digit to use
  */
-function drawBlackDigit(x: number, y: number, digit: number, resource: string): void {
+function drawBlackDigit(
+  x: number,
+  y: number,
+  digit: number,
+  resource: string
+): void {
+  var spriteWidth = 13;
+  var spriteHeight = 10;
 
-    var spriteWidth = 13;
-    var spriteHeight = 10;
+  var spriteOffsetX = 254 + spriteWidth * digit;
+  var spriteOffsetY = 128;
 
-    var spriteOffsetX = 254 + spriteWidth * digit;
-    var spriteOffsetY = 128;
+  if (resource === "bricks") {
+    spriteOffsetY += spriteHeight * 0;
+  }
+  if (resource === "gems") {
+    spriteOffsetY += spriteHeight * 1;
+  }
+  if (resource === "recruits") {
+    spriteOffsetY += spriteHeight * 2;
+  }
 
-    if (resource === "bricks")	 { spriteOffsetY += spriteHeight * 0; }
-    if (resource === "gems")	 { spriteOffsetY += spriteHeight * 1; }
-    if (resource === "recruits") { spriteOffsetY += spriteHeight * 2; }
+  var sheetX = x - spriteOffsetX;
+  var sheetY = y - spriteOffsetY;
 
-    var sheetX = x - spriteOffsetX;
-    var sheetY = y - spriteOffsetY;
-
-    bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
+  bitBlit(spriteSheet, [x, y, spriteWidth, spriteHeight], [sheetX, sheetY]);
 }
