@@ -1,7 +1,7 @@
 .DS_Store
 .idea
 
-/frontend/dist
 node_modules
-/fontend/src/*.js
-/backend/src/*.js
+
+/frontend/dist/
+/frontend/Sounds/
