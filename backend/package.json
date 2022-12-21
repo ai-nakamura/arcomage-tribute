@@ -8,6 +8,7 @@
     "express": "^4.18.2"
   },
   "scripts": {
+    "compile": "tsc",
     "start": "tsc && node src"
   },
   "type": "module"
