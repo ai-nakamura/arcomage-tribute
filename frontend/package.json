@@ -6,6 +6,6 @@
     "webpack-cli": "^4.8.0"
   },
   "scripts": {
-    "compile": "tsc"
+    "compile": "tsc && webpack"
   }
 }
