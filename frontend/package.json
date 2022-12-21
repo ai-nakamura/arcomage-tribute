@@ -6,6 +6,7 @@
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
+    "format": "prettier --check src",
     "compile": "tsc && webpack"
   }
 }
